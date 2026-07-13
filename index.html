@@ -1,1409 +1,281 @@
-<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Phu Quoc Family Trip",
-  "schemaVersion": 1,
-  "description": "푸꾸옥 3박4일 가족여행 인터랙티브 플래너 — 탭별 일정·리조트 비교·예산·체크·캘린더 등록·예약 트래커·Q&A",
-  "mcpTools": [
-    "mcp__1564f772-7d43-4b4e-8c04-1c754dcdf2a1__create_event",
-    "mcp__1564f772-7d43-4b4e-8c04-1c754dcdf2a1__list_events",
-    "mcp__c02abca3-d338-4433-ae4c-4b50930551fb__search_threads"
-  ],
-  "mcpServerNames": [
-    "Google Calendar",
-    "Google Calendar",
-    "Gmail"
-  ]
-}
-</script>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>푸꾸옥 가족여행 플래너</title>
+<title>푸꾸옥 가족여행 일정 (4박5일)</title>
 <style>
-:root { color-scheme: light; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", sans-serif;
-  background: #fafaf7; color: #2a2a2a; line-height: 1.6;
-  padding: 20px; max-width: 900px; margin: 0 auto;
+:root{
+  color-scheme: light;
+  --bg:#f6f7f4; --card:#ffffff; --ink:#232626; --muted:#6b7280;
+  --line:#e6e8e3; --accent:#0e7490; --accent2:#c2410c;
+  --day1:#0e7490; --day2:#0d9488; --day3:#4338ca; --day4:#b45309; --day5:#be123c;
 }
-.hero {
-  background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
-  border-radius: 16px; padding: 28px 24px; margin-bottom: 24px;
-  border: 1px solid #e5e7eb;
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR",sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.6;
+  padding:16px; max-width:760px; margin:0 auto; -webkit-text-size-adjust:100%;
 }
-.hero h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-.hero .sub { color: #4b5563; font-size: 14px; }
-.hero .meta {
-  display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap;
-  font-size: 13px; color: #374151;
+.hero{
+  background:linear-gradient(135deg,#0e7490,#0d9488); color:#fff;
+  border-radius:18px; padding:22px 20px; margin-bottom:16px;
 }
-.hero .meta span { background: rgba(255,255,255,0.7); padding: 4px 10px; border-radius: 12px; }
-
-.tabs {
-  display: flex; gap: 4px; margin-bottom: 16px;
-  background: #f3f4f6; padding: 4px; border-radius: 10px;
-  overflow-x: auto;
+.hero h1{font-size:22px; letter-spacing:-.3px; margin-bottom:6px}
+.hero .sub{font-size:14px; opacity:.95; margin-bottom:14px}
+.hero .facts{display:flex; flex-wrap:wrap; gap:8px}
+.hero .facts span{
+  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25);
+  padding:5px 10px; border-radius:999px; font-size:12.5px; white-space:nowrap;
 }
-.tab {
-  flex: 1; min-width: 60px; padding: 10px 8px; border: none;
-  background: transparent; border-radius: 8px; cursor: pointer;
-  font-size: 13px; font-weight: 500; color: #6b7280; transition: all 0.2s;
-  white-space: nowrap;
+nav.toc{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  display:flex; gap:6px; overflow-x:auto; padding:10px 2px; margin-bottom:8px;
+  border-bottom:1px solid var(--line);
 }
-.tab.active { background: white; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.tab:hover:not(.active) { color: #374151; }
-
-.panel { display: none; }
-.panel.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
-
-.card {
-  background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-  padding: 20px; margin-bottom: 16px;
+nav.toc a{
+  flex:0 0 auto; text-decoration:none; color:var(--ink);
+  background:var(--card); border:1px solid var(--line); border-radius:999px;
+  padding:6px 12px; font-size:13px; font-weight:600;
 }
-.card h2 { font-size: 17px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.card h3 { font-size: 15px; color: #6b7280; margin: 14px 0 8px; font-weight: 600; }
-
-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 14px; }
-th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
-th { background: #f9fafb; font-weight: 600; color: #374151; font-size: 13px; }
-tr:last-child td { border-bottom: none; }
-
-.timeline { position: relative; padding-left: 24px; }
-.timeline::before {
-  content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px;
-  width: 2px; background: linear-gradient(180deg, #fbbf24, #f59e0b);
+nav.toc a.d{color:#fff}
+nav.toc a.d1{background:var(--day1);border-color:var(--day1)}
+nav.toc a.d2{background:var(--day2);border-color:var(--day2)}
+nav.toc a.d3{background:var(--day3);border-color:var(--day3)}
+nav.toc a.d4{background:var(--day4);border-color:var(--day4)}
+nav.toc a.d5{background:var(--day5);border-color:var(--day5)}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:18px; margin-bottom:14px;
 }
-.timeline-item { position: relative; padding: 8px 0 16px; }
-.timeline-item::before {
-  content: ''; position: absolute; left: -22px; top: 14px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: #f59e0b; border: 2px solid white; box-shadow: 0 0 0 1px #f59e0b;
+.day-head{display:flex; align-items:baseline; gap:10px; margin-bottom:4px}
+.day-badge{
+  color:#fff; font-weight:800; font-size:13px; padding:3px 10px; border-radius:8px;
 }
-.time { font-weight: 600; color: #d97706; font-size: 13px; }
-.activity { font-size: 14px; margin-top: 2px; }
-.note { font-size: 12px; color: #6b7280; margin-top: 4px; font-style: italic; }
-
-.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
-.tag-warn { background: #fef3c7; color: #92400e; }
-.tag-tip  { background: #dbeafe; color: #1e40af; }
-.tag-must { background: #fee2e2; color: #991b1b; }
-
-.checklist label {
-  display: flex; align-items: flex-start; gap: 10px; padding: 10px;
-  border-radius: 8px; cursor: pointer; transition: background 0.15s; font-size: 14px;
+.b1{background:var(--day1)} .b2{background:var(--day2)} .b3{background:var(--day3)}
+.b4{background:var(--day4)} .b5{background:var(--day5)}
+.day-title{font-size:17px; font-weight:800; letter-spacing:-.2px}
+.day-date{font-size:13px; color:var(--muted); margin-bottom:12px}
+.tl{list-style:none; border-left:2px solid var(--line); margin-left:6px}
+.tl li{position:relative; padding:0 0 14px 16px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{
+  content:""; position:absolute; left:-7px; top:5px; width:11px; height:11px;
+  border-radius:50%; background:var(--accent); border:2px solid #fff;
 }
-.checklist label:hover { background: #f9fafb; }
-.checklist input[type="checkbox"] { margin-top: 3px; cursor: pointer; width: 16px; height: 16px; }
-.checklist input[type="checkbox"]:checked + span { text-decoration: line-through; color: #9ca3af; }
-
-.budget-total {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  padding: 16px; border-radius: 10px; margin-top: 12px;
-  text-align: center; font-weight: 700; font-size: 16px; color: #78350f;
+.tl .t{font-weight:700; font-size:13px; color:var(--accent)}
+.tl .a{font-weight:600; font-size:14.5px; display:block}
+.tl .m{font-size:12.5px; color:var(--muted)}
+.hi{background:#fff7ed; box-shadow:inset 3px 0 0 var(--accent2)}
+.stay{
+  margin-top:12px; font-size:13px; font-weight:700; color:#0f766e;
+  background:#ecfdf5; border-radius:10px; padding:8px 12px;
 }
-.callout {
-  background: #fffbeb; border-left: 4px solid #f59e0b;
-  padding: 12px 14px; border-radius: 6px; margin: 12px 0; font-size: 14px;
+h2.sec{font-size:17px; font-weight:800; margin-bottom:12px; letter-spacing:-.2px}
+table{width:100%; border-collapse:collapse; font-size:13.5px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:#f0f2ee; font-weight:700}
+td.r,th.r{text-align:right; white-space:nowrap}
+.total{
+  margin-top:12px; font-weight:800; font-size:15px; color:#0f766e;
+  background:#ecfdf5; border-radius:10px; padding:10px 14px;
 }
-.callout.warn { background: #fef2f2; border-left-color: #ef4444; }
-.callout.tip  { background: #eff6ff; border-left-color: #3b82f6; }
-
-.summary {
-  background: #f0fdf4; border: 1px solid #bbf7d0;
-  border-radius: 12px; padding: 16px; margin-top: 20px;
-  font-size: 14px; color: #166534;
-}
-
-/* ── MAP COMPONENT ── */
-.map-wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
-.map-svg-box {
-  flex: 0 0 auto; background: #a8d8ea;
-  border-radius: 12px; overflow: hidden; border: 2px solid #93c5fd;
-}
-.map-legend { flex: 1; min-width: 150px; }
-.map-card {
-  display: flex; align-items: center; gap: 7px;
-  padding: 5px 8px; border-radius: 8px; margin-bottom: 4px;
-  font-size: 12px; line-height: 1.25;
-  border: 1.5px solid #f0f0f0; background: white;
-  cursor: pointer; transition: all 0.18s; user-select: none;
-}
-.map-card:hover { border-color: #d1d5db; background: #f9fafb; }
-.map-card.active {
-  border-color: var(--mc, #6b7280);
-  background: var(--mb, #f3f4f6);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.09);
-}
-.map-badge {
-  width: 18px; height: 18px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700; color: white;
-  flex-shrink: 0; margin-top: 0;
-}
-.ov-hint { font-size: 12px; color: #6b7280; margin-bottom: 12px; line-height: 1.5; }
-.restore-btn { display: inline-block; margin-bottom: 12px; padding: 8px 14px; font-size: 13px; font-weight: 700; color: #b45309; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 8px; cursor: pointer; transition: all 0.15s; }
-.restore-btn:hover { background: #fef3c7; }
-.restore-btn.restore-armed { color: #991b1b; background: #fef2f2; border-color: #fca5a5; }
-.tl-auto { font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 2px 8px; margin-left: 6px; }
-.tl-travel .activity { color: #6b7280; font-size: 13px; }
-.tl-travel .time { color: #9ca3af; }
-.tl-empty { font-size: 13px; color: #9ca3af; font-style: italic; padding: 8px 0 12px; }
-.timeset-grid { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 14px; }
-.timeset-grid label { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 600; color: #374151; max-width: 360px; }
-.timeset-grid input[type="time"] { font-size: 14px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 8px; background: white; }
-.timeset-actions { margin-bottom: 12px; }
-.timeset-reset { font-size: 12px; font-weight: 600; color: #6b7280; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 7px 14px; cursor: pointer; }
-.timeset-reset:hover { background: #e5e7eb; }
-.ov-day {
-  border: 1px solid #e5e7eb; border-left: 4px solid #f59e0b;
-  border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; background: #fffdf8;
-}
-.ov-day-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.ov-day-no { font-weight: 700; font-size: 13px; color: #b45309; }
-.ov-day-theme { font-size: 11px; color: #6b7280; background: #fef3c7; padding: 1px 8px; border-radius: 10px; }
-.ov-day-route { font-size: 13px; color: #1f2937; line-height: 1.5; }
-.ov-arrow { color: #f59e0b; font-weight: 700; }
-.ov-day-empty { font-size: 12px; color: #9ca3af; font-style: italic; }
-.ov-dir {
-  display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700;
-  color: #1a73e8; text-decoration: none; background: #eff6ff;
-  border: 1px solid #bfdbfe; border-radius: 6px; padding: 3px 8px;
-}
-.ov-dir:hover { background: #dbeafe; }
-.map-card-body { flex: 1; min-width: 0; }
-.map-name { font-weight: 600; font-size: 12px; }
-.map-desc { color: #6b7280; font-size: 10px; }
-.map-addr { color: #4b5563; font-size: 10px; margin-top: 2px; }
-.map-coord { color: #9ca3af; font-size: 9px; }
-.map-gmap-link {
-  flex-shrink: 0; align-self: center;
-  font-size: 10px; font-weight: 700; color: #2563eb; text-decoration: none;
-  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px;
-  padding: 4px 7px; white-space: nowrap;
-}
-.map-gmap-link:hover { background: #dbeafe; }
-.dir-btn {
-  display: block; margin-top: 8px; padding: 9px 12px;
-  text-align: center; text-decoration: none;
-  background: #1a73e8; color: white; font-size: 12px; font-weight: 700;
-  border-radius: 8px; box-shadow: 0 1px 3px rgba(26,115,232,0.35);
-}
-.dir-btn:hover { background: #1765cc; }
-.map-tip {
-  margin-top: 10px; padding: 10px;
-  background: #eff6ff; border-left: 3px solid #3b82f6;
-  border-radius: 6px; font-size: 12px; color: #1e40af;
-}
-.save-row {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px;
-}
-.save-row-label { font-size: 12px; color: #6b7280; font-weight: 600; flex-shrink: 0; }
-.save-day-btn {
-  padding: 6px 16px; border: 2px solid #e5e7eb; border-radius: 8px;
-  background: white; color: #374151; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.18s;
-}
-.save-day-btn:hover { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
-.save-day-btn.saved { border-color: #10b981 !important; color: #065f46; background: #d1fae5; }
-
-@keyframes ring-pulse {
-  0%   { r: 18; opacity: 0.9; stroke-width: 3; }
-  100% { r: 30; opacity: 0;   stroke-width: 1; }
-}
-.pulse-ring { animation: ring-pulse 1.4s ease-out infinite; fill: none; }
-
-/* ── LIVE FEATURES ── */
-.cal-input-row {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;
-}
-.cal-input-row label { font-size: 14px; font-weight: 600; color: #374151; }
-.cal-input-row input[type="date"] {
-  padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px;
-  font-size: 14px; color: #111; background: white;
-}
-.btn-primary {
-  padding: 10px 20px; background: #4f46e5; color: white;
-  border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: background 0.2s;
-}
-.btn-primary:hover:not(:disabled) { background: #4338ca; }
-.btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
-.cal-hint { font-size: 12px; color: #9ca3af; margin-bottom: 10px; }
-.day-dates { font-size: 12px; color: #6b7280; margin-bottom: 14px; line-height: 1.8; }
-.cal-status { margin-top: 12px; font-size: 14px; padding: 12px 14px; border-radius: 8px; }
-.cal-status.success { background: #d1fae5; color: #065f46; }
-.cal-status.error   { background: #fee2e2; color: #991b1b; }
-.cal-status.info    { background: #dbeafe; color: #1e40af; }
-.cal-progress { margin-top: 10px; display: flex; flex-direction: column; gap: 3px; }
-.cal-progress-item { font-size: 13px; padding: 2px 0; }
-
-.tracker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-.tracker-item { padding: 12px 14px; border-radius: 10px; border: 1px solid #e5e7eb; }
-.tracker-item.booked     { background: #f0fdf4; border-color: #bbf7d0; }
-.tracker-item.not-booked { background: #f9fafb; }
-.tracker-item.loading    { background: #fafaf7; opacity: 0.75; }
-.ti-label   { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-.ti-status  { font-size: 13px; }
-.ti-preview { font-size: 12px; color: #6b7280; margin-top: 4px;
-              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.qa-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-.qa-chip {
-  padding: 6px 12px; background: #eff6ff; color: #1d4ed8;
-  border: 1px solid #bfdbfe; border-radius: 20px; font-size: 13px;
-  cursor: pointer; transition: all 0.15s;
-}
-.qa-chip:hover { background: #dbeafe; }
-.qa-input-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-.qa-input-row input {
-  flex: 1; min-width: 200px; padding: 10px 12px;
-  border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;
-}
-.qa-answer {
-  background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
-  padding: 14px; font-size: 14px; line-height: 1.75; min-height: 60px;
-  color: #374151; white-space: pre-wrap;
-}
-.qa-placeholder { color: #9ca3af; font-style: italic; }
-
-.spinner {
-  display: inline-block; width: 13px; height: 13px;
-  border: 2px solid #d1d5db; border-top-color: #6366f1;
-  border-radius: 50%; animation: spin 0.7s linear infinite;
-  vertical-align: middle; margin-right: 5px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-@media (max-width: 600px) {
-  body { padding: 12px; }
-  .hero { padding: 20px 16px; }
-  .hero h1 { font-size: 22px; }
-  th, td { padding: 8px 6px; font-size: 13px; }
-  .map-wrap { flex-direction: column; }
-  .map-svg-box svg { width: 100%; height: auto; }
-  .cal-input-row { flex-direction: column; align-items: flex-start; }
-  .tracker-grid { grid-template-columns: 1fr; }
-}
-.share-banner {
-  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
-  border: 1px solid #bfdbfe; border-radius: 12px;
-  padding: 12px 16px; margin: 0 auto 16px; max-width: 900px;
-  font-size: 13px; color: #1e3a5f; line-height: 1.5;
-}
-.share-banner b { color: #1d4ed8; }
+.note{font-size:12.5px; color:var(--muted); margin-top:8px}
+.warn{background:#fff7ed; border:1px solid #fed7aa; color:#9a3412;
+  border-radius:10px; padding:9px 12px; font-size:13px; margin-top:10px}
+ul.chk{list-style:none; font-size:14px}
+ul.chk li{padding:6px 0 6px 26px; position:relative; border-bottom:1px dashed var(--line)}
+ul.chk li:last-child{border-bottom:none}
+ul.chk li::before{content:"☐"; position:absolute; left:2px; top:5px; color:var(--accent)}
+footer{text-align:center; color:var(--muted); font-size:12px; padding:16px 0 8px}
+.strong{font-weight:800}
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <h1>🏝️ 푸꾸옥 가족여행 플래너</h1>
-  <div class="sub">3박 4일 · 성인 4명 + 6세 + 19개월</div>
-  <div class="meta">
-    <span>📅 10월 예정</span>
-    <span>✈️ 인천 → 푸꾸옥</span>
-    <span>💰 예산 435~575만원</span>
-    <span>🏨 JW 메리어트 추천</span>
+  <h1>🏝️ 푸꾸옥 가족여행</h1>
+  <div class="sub">4박 5일 · 2026.10.06(화) ~ 10.10(토) · 성인 4 + 6세(107cm) + 19개월</div>
+  <div class="facts">
+    <span>✈️ 가는편 TW055 (티웨이)</span>
+    <span>✈️ 오는편 VJ976 (비엣젯)</span>
+    <span>🏨 노보텔 2박 → 빈펄 원더월드 2박</span>
   </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" data-tab="overview">전체일정</button>
-  <button class="tab" data-tab="mapview">🗺️ 전체지도</button>
-  <button class="tab" data-tab="day1">Day 1</button>
-  <button class="tab" data-tab="day2">Day 2</button>
-  <button class="tab" data-tab="day3">Day 3</button>
-  <button class="tab" data-tab="day4">Day 4</button>
-  <button class="tab" data-tab="timeset">⏱️ 시간</button>
-  <button class="tab" data-tab="resort">리조트</button>
-  <button class="tab" data-tab="budget">예산</button>
-  <button class="tab" data-tab="checklist">체크</button>
-  <button class="tab" data-tab="calendar">📅 캘린더</button>
-  <button class="tab" data-tab="qa">🤔 Q&A</button>
-</div>
-
-<!-- OVERVIEW -->
-<div class="panel active" id="overview">
-  <div class="card">
-    <h2>📋 한눈에 보는 일정</h2>
-    <p class="ov-hint">🗺️ <strong>전체지도</strong>에서 장소를 고르고 <strong>'Day N'</strong>에 저장하면 여기에 자동 정리됩니다. 선택을 바꾸면 즉시 갱신돼요.</p>
-    <button id="restore-route-btn" class="restore-btn">🔄 추천 루트로 복원</button>
-    <div id="overview-schedule"></div>
-  </div>
-  <div class="card">
-    <h2>🎯 설계 원칙</h2>
-    <table>
-      <thead><tr><th>원칙</th><th>이유</th></tr></thead>
-      <tbody>
-        <tr><td><strong>19개월 낮잠 사수</strong><br>12:30~14:30</td><td>이거 깨지면 오후 전체 멘붕</td></tr>
-        <tr><td><strong>하루 1 액티비티</strong></td><td>욕심내면 6세도 무너짐</td></tr>
-        <tr><td><strong>이동 30분 이내</strong></td><td>푸꾸옥 택시 길어지면 짜증</td></tr>
-        <tr><td><strong>저녁은 리조트 OR 5분 거리</strong></td><td>밤 7시 이후는 아기 한계</td></tr>
-      </tbody>
-    </table>
-    <div class="callout warn">⚠️ <strong>10월 푸꾸옥</strong>은 우기 끝물 — 스콜 대비 우산·우비 필수</div>
-  </div>
-</div>
-
-<!-- 전체 지도 -->
-<div class="panel" id="mapview">
-  <div class="card">
-    <h2>🗺️ 전체 여행지 지도</h2>
-    <div class="map-wrap">
-      <div class="map-svg-box" id="main-box"></div>
-      <div class="map-legend" id="main-cards"></div>
-    </div>
-    <div class="map-tip" id="main-tip">카드를 클릭해 위치를 확인하고 동선을 짜보세요. 2개 이상 선택 시 이동시간이 표시됩니다.</div>
-    <div class="save-row">
-      <span class="save-row-label">현재 동선 저장 →</span>
-      <button class="save-day-btn" data-day="d1">Day 1</button>
-      <button class="save-day-btn" data-day="d2">Day 2</button>
-      <button class="save-day-btn" data-day="d3">Day 3</button>
-      <button class="save-day-btn" data-day="d4">Day 4</button>
-    </div>
-  </div>
-</div>
+<nav class="toc">
+  <a class="d d1" href="#day1">Day 1</a>
+  <a class="d d2" href="#day2">Day 2</a>
+  <a class="d d3" href="#day3">Day 3</a>
+  <a class="d d4" href="#day4">Day 4</a>
+  <a class="d d5" href="#day5">Day 5</a>
+  <a href="#flight">항공</a>
+  <a href="#stay">숙박</a>
+  <a href="#ticket">티켓</a>
+  <a href="#budget">예산</a>
+  <a href="#check">체크</a>
+</nav>
 
 <!-- DAY 1 -->
-<div class="panel" id="day1">
-  <div class="card">
-    <h2>✈️ Day 1 — 리조트 안착</h2>
-    <div class="map-wrap">
-      <div class="map-svg-box" id="d1-box"></div>
-      <div class="map-legend" id="d1-cards"></div>
-    </div>
-    <div class="map-tip" id="d1-tip"></div>
-  </div>
-  <div class="card">
-    <h2>📅 타임라인</h2>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="time">19:30</div><div class="activity">인천 출발 (VietJet/Eastar)</div>
-        <div class="note">기내식 후 아이들 재우기 모드</div>
-      </div>
-      <div class="timeline-item">
-        <div class="time">22:30 (현지)</div><div class="activity">푸꾸옥 도착</div>
-        <div class="note">시차 2시간 빠름 (한국 기준 24:30)</div>
-      </div>
-      <div class="timeline-item">
-        <div class="time">23:30</div>
-        <div class="activity">리조트 체크인 <span class="tag tag-must">베이비코트 사전 요청</span></div>
-      </div>
-      <div class="timeline-item">
-        <div class="time">24:00</div><div class="activity">취침 — 첫날은 무조건 잠</div>
-      </div>
-    </div>
-    <div class="callout warn">도착이 늦으니 <strong>첫날 저녁 예약 잡지 말 것</strong>. 기내식 + 간단한 룸서비스로.</div>
-  </div>
+<div class="card" id="day1">
+  <div class="day-head"><span class="day-badge b1">DAY 1</span><span class="day-title">인천 → 푸꾸옥 (도착)</span></div>
+  <div class="day-date">10/6(화) · 첫날은 이동만, 도착 후 바로 취침</div>
+  <ul class="tl">
+    <li><span class="t">19:50</span><span class="a">인천 출발 (t'way TW055)</span></li>
+    <li><span class="t">23:35</span><span class="a">푸꾸옥 도착</span><span class="m">시차 -2h (한국 01:35)</span></li>
+    <li class="hi"><span class="t">~23:50</span><span class="a">노보텔 무료 공항 픽업</span><span class="m">⚠️ 편명 24시간 전 전달 필수</span></li>
+    <li><span class="t">00:15</span><span class="a">노보텔 체크인 → 취침</span><span class="m">첫날은 잠만</span></li>
+  </ul>
+  <div class="stay">🏨 노보텔 푸꾸옥 (조식·아동무료·무료취소)</div>
 </div>
 
 <!-- DAY 2 -->
-<div class="panel" id="day2">
-  <div class="card">
-    <h2>🏖️ Day 2 — 리조트 적응 + 야시장</h2>
-    <div class="map-wrap">
-      <div class="map-svg-box" id="d2-box"></div>
-      <div class="map-legend" id="d2-cards"></div>
-    </div>
-    <div class="map-tip" id="d2-tip"></div>
-  </div>
-  <div class="card">
-    <h2>📅 타임라인 <span class="tl-auto">선택 기반 자동 · 추정 시각</span></h2>
-    <div class="timeline" id="d2-timeline"></div>
-    <div class="callout tip">💡 첫 풀 데이는 리조트에서. 이동 최소화로 시차·피로 회복.</div>
-  </div>
+<div class="card" id="day2">
+  <div class="day-head"><span class="day-badge b2">DAY 2</span><span class="day-title">노보텔 호캉스 (중부 휴식)</span></div>
+  <div class="day-date">10/7(수) · 시차 회복 · 이동 최소화</div>
+  <ul class="tl">
+    <li><span class="t">08:00</span><span class="a">조식 (여유)</span></li>
+    <li><span class="t">09:30~12:00</span><span class="a">리조트 구경 · 키즈클럽 · 키즈풀</span><span class="m">시차 회복</span></li>
+    <li><span class="t">12:00</span><span class="a">점심 (리조트/롱비치)</span></li>
+    <li class="hi"><span class="t">12:30~14:30</span><span class="a">낮잠 사수</span><span class="m">19개월 필수</span></li>
+    <li><span class="t">15:00~17:30</span><span class="a">전용 비치 · 수영</span></li>
+    <li><span class="t">17:50</span><span class="a">인피니티풀 선셋</span><span class="m">일몰 ~17:50</span></li>
+    <li><span class="t">19:00</span><span class="a">소나시 야시장</span><span class="m">유모차 친화, 차량 10~15분</span></li>
+    <li><span class="t">21:30</span><span class="a">취침</span></li>
+  </ul>
+  <div class="stay">🏨 노보텔 푸꾸옥</div>
 </div>
 
 <!-- DAY 3 -->
-<div class="panel" id="day3">
-  <div class="card">
-    <h2>🎢 Day 3 — 빈원더스 (체력전)</h2>
-    <div class="map-wrap">
-      <div class="map-svg-box" id="d3-box"></div>
-      <div class="map-legend" id="d3-cards"></div>
-    </div>
-    <div class="map-tip" id="d3-tip"></div>
-  </div>
-  <div class="card">
-    <h2>📅 타임라인 <span class="tl-auto">선택 기반 자동 · 추정 시각</span></h2>
-    <div class="timeline" id="d3-timeline"></div>
-    <div class="callout">
-      <strong>6세 추천 우선순위:</strong> 사파리 &gt; 워터파크 &gt; 놀이공원<br>
-      <strong>19개월:</strong> 사파리 차량 투어가 최고
-    </div>
-  </div>
+<div class="card" id="day3">
+  <div class="day-head"><span class="day-badge b3">DAY 3</span><span class="day-title">북부 이동 + 그랜드월드</span></div>
+  <div class="day-date">10/8(목) · 중부 → 북부 이동일</div>
+  <ul class="tl">
+    <li><span class="t">08:00</span><span class="a">조식 · 오전 수영</span></li>
+    <li class="hi"><span class="t">11:00</span><span class="a">체크아웃 → 그랩 밴 북상</span><span class="m">45~60분, 유모차+캐리어</span></li>
+    <li><span class="t">12:00~13:00</span><span class="a">빈펄 원더월드 체크인</span><span class="m">얼리체크인 요청(불가 시 짐보관)</span></li>
+    <li><span class="t">13:00</span><span class="a">점심</span></li>
+    <li><span class="t">14:00~17:30</span><span class="a">원더월드 호캉스 (프라이빗풀·키즈풀)</span></li>
+    <li><span class="t">18:30</span><span class="a">그랜드월드 구경 + 저녁</span><span class="m">곤돌라·야경쇼, 무료 셔틀</span></li>
+    <li><span class="t">21:30</span><span class="a">취침</span></li>
+  </ul>
+  <div class="stay">🏨 빈펄 원더월드 (빈원더스 도보 300m)</div>
 </div>
 
 <!-- DAY 4 -->
-<div class="panel" id="day4">
-  <div class="card">
-    <h2>🌅 Day 4 — 선셋타운 + 출국</h2>
-    <div class="map-wrap">
-      <div class="map-svg-box" id="d4-box"></div>
-      <div class="map-legend" id="d4-cards"></div>
-    </div>
-    <div class="map-tip" id="d4-tip"></div>
-  </div>
-  <div class="card">
-    <h2>📅 타임라인 <span class="tl-auto">선택 기반 자동 · 추정 시각</span></h2>
-    <div class="timeline" id="d4-timeline"></div>
-    <div class="callout warn">리조트에 <strong>체크아웃 후 샤워실 사용 가능한지</strong> 사전 확인 필수</div>
-  </div>
+<div class="card" id="day4">
+  <div class="day-head"><span class="day-badge b4">DAY 4</span><span class="day-title">빈펄 사파리 + 호캉스</span></div>
+  <div class="day-date">10/9(금) · 오전 사파리, 오후 리조트</div>
+  <ul class="tl">
+    <li><span class="t">07:30</span><span class="a">조식 (이른)</span></li>
+    <li class="hi"><span class="t">09:00</span><span class="a">빈펄 사파리 오픈런</span><span class="m">무료 셔틀 10~15분, 동물 활발·한산</span></li>
+    <li><span class="t">10:00</span><span class="a">사파리 차량투어 · 동물쇼</span><span class="m">19개월 차량투어 최고</span></li>
+    <li><span class="t">12:00</span><span class="a">점심</span></li>
+    <li class="hi"><span class="t">12:30~14:30</span><span class="a">낮잠</span></li>
+    <li><span class="t">15:00~17:30</span><span class="a">원더월드 호캉스 (수영·키즈클럽)</span></li>
+    <li><span class="t">18:30</span><span class="a">리조트 디너</span></li>
+  </ul>
+  <div class="stay">🏨 빈펄 원더월드</div>
 </div>
 
-<!-- TIME SETTINGS -->
-<div class="panel" id="timeset">
-  <div class="card">
-    <h2>⏱️ 시간 골격 설정</h2>
-    <p class="ov-hint">Day2~4 타임라인의 <strong>고정 골격 시각</strong>입니다. 바꾸면 모든 Day 타임라인이 즉시 다시 계산돼요. (선택 장소는 이 골격 사이에 자동 배치)</p>
-    <div class="timeset-grid">
-      <label>🍳 조식 시작 <input type="time" data-anchor="breakfast" value="08:00"></label>
-      <label>🚶 오전 활동 시작 <input type="time" data-anchor="morningStart" value="09:30"></label>
-      <label>😴 낮잠/휴식 시작 <input type="time" data-anchor="napStart" value="12:30"></label>
-      <label>☀️ 낮잠/휴식 끝 <input type="time" data-anchor="napEnd" value="14:30"></label>
-      <label>🌙 취침 <input type="time" data-anchor="bedtime" value="21:30"></label>
-    </div>
-    <div class="timeset-actions">
-      <button id="timeset-reset" class="timeset-reset">기본값으로 복원</button>
-    </div>
-    <div class="callout tip">💡 <strong>낮잠 사수</strong>가 핵심 원칙이라, 낮잠 시작 시각이 지나면 활동이 자동으로 낮잠 뒤로 밀립니다.</div>
-  </div>
+<!-- DAY 5 -->
+<div class="card" id="day5">
+  <div class="day-head"><span class="day-badge b5">DAY 5</span><span class="day-title">빈원더스 워터파크 → 마사지 → 출국</span></div>
+  <div class="day-date">10/10(토) · 마지막날, 저녁 출국</div>
+  <ul class="tl">
+    <li><span class="t">08:00</span><span class="a">조식</span></li>
+    <li><span class="t">11:00</span><span class="a">체크아웃 + 짐 보관</span></li>
+    <li class="hi"><span class="t">11:30~15:30</span><span class="a">빈원더스 아쿠아리움 + 워터파크</span><span class="m">콤보권 · 테마 라이드는 키 제한(110cm+)이라 패스</span></li>
+    <li><span class="t">15:30</span><span class="a">샤워 · 환복 → 짐 회수</span></li>
+    <li><span class="t">16:00</span><span class="a">남하 이동 (중부)</span><span class="m">~45분</span></li>
+    <li class="hi"><span class="t">16:45~17:45</span><span class="a">마사지 (가족 스파, 중부)</span><span class="m">비행 전 휴식</span></li>
+    <li><span class="t">17:45</span><span class="a">공항 픽업 서비스로 이동</span><span class="m">밴, 15~20분</span></li>
+    <li><span class="t">18:10</span><span class="a">공항 도착 · 수속</span><span class="m">출발 2h+ 전</span></li>
+    <li><span class="t">20:35</span><span class="a">푸꾸옥 출발 (Vietjet VJ976)</span></li>
+    <li class="hi"><span class="t">04:00<br>(10/11)</span><span class="a">인천 도착</span><span class="m">⚠️ 새벽 도착, 귀가 교통 대비</span></li>
+  </ul>
 </div>
 
-<!-- RESORT -->
-<div class="panel" id="resort">
-  <div class="card">
-    <h2>🏨 리조트 비교</h2>
-    <table>
-      <thead><tr><th>항목</th><th>JW 메리어트</th><th>인터컨티넨탈</th><th>멜리아 빈펄</th></tr></thead>
-      <tbody>
-        <tr><td>키즈클럽</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
-        <tr><td>얕은풀</td><td>있음</td><td>있음</td><td><strong>다양함</strong></td></tr>
-        <tr><td>식사 옵션</td><td>다양</td><td>좋음</td><td>빈원더스 셔틀</td></tr>
-        <tr><td>공항 거리</td><td>남쪽 25분</td><td>중부 20분</td><td>북부 45분</td></tr>
-        <tr><td>가격/박</td><td>40~80만원</td><td>35~70만원</td><td>미확인</td></tr>
-        <tr><td>가족 추천도</td><td>🥈</td><td>🥉</td><td>🏨</td></tr>
-      </tbody>
-    </table>
-    <div class="callout tip">
-      <strong>결정 분기:</strong><br>
-      · 빈원더스 1일 + 남부 중심 → <strong>JW 메리어트</strong><br>
-      · 빈원더스 2일+ or 셔틀 의존 → <strong>멜리아 빈펄</strong><br>
-      · 가성비 + 중부 접근성 → <strong>인터컨티넨탈</strong>
-    </div>
-  </div>
+<!-- FLIGHT -->
+<div class="card" id="flight">
+  <h2 class="sec">✈️ 확정 항공편 (발권 완료)</h2>
+  <table>
+    <thead><tr><th>구간</th><th>편명 · 항공사</th><th>일정 (현지시각)</th></tr></thead>
+    <tbody>
+      <tr><td>가는편<br>인천→푸꾸옥</td><td><span class="strong">TW055</span><br>티웨이항공 (직항)</td><td>10/6(화) 19:50 ICN 출발<br>10/6(화) 23:35 PQC 도착<br><span class="note">B737 MAX 8 · 5h45</span></td></tr>
+      <tr><td>오는편<br>푸꾸옥→인천</td><td><span class="strong">VJ976</span><br>비엣젯항공 (직항)</td><td>10/10(토) 20:35 PQC 출발<br>10/11(일) 04:00 ICN 도착<br><span class="note">A320 · 5h25 · 레드아이</span></td></tr>
+    </tbody>
+  </table>
+  <div class="total">💵 항공 총액: 3,160,800원 (6인 왕복, 발권 완료)</div>
+  <div class="note">운임 1,553,300 + 세금·수수료 1,514,800 + 발권수수료 50,000 + 추가수하물 42,700원. 성인 4 + 6세 1(성인운임) + 유아 1 기준.</div>
+</div>
+
+<!-- STAY -->
+<div class="card" id="stay">
+  <h2 class="sec">🏨 확정 숙박 (예약 완료)</h2>
+  <table>
+    <thead><tr><th>숙소</th><th>숙박일</th><th>객실</th><th class="r">금액(대략)</th></tr></thead>
+    <tbody>
+      <tr><td><span class="strong">노보텔 푸꾸옥</span><br>4성 · 중부 롱비치</td><td>10/6~10/8<br>(2박)</td><td>1박차: 트윈 2객실<br>2박차: 방갈로(프라이빗풀)+가든더블</td><td class="r">≈113만</td></tr>
+      <tr><td><span class="strong">빈펄 원더월드</span><br>5성 · 북부 가인다우</td><td>10/8~10/10<br>(2박)</td><td>2베드룸 프라이빗풀 빌라 1채</td><td class="r">≈81만</td></tr>
+    </tbody>
+  </table>
+  <div class="total">💵 숙박 총액: 약 194만원 (4박, 조식·무료취소 포함)</div>
+  <div class="note">확정 결제액은 노보텔 USD 813 / 빈펄 VND 15.0M. 실제 카드 청구액은 결제일(10/3~4) 환율로 정산됨.</div>
+</div>
+
+<!-- TICKET -->
+<div class="card" id="ticket">
+  <h2 class="sec">🎟️ 티켓 — 빈원더스 + 사파리 콤보</h2>
+  <table>
+    <thead><tr><th>대상</th><th class="r">콤보가 (VND)</th><th class="r">원화(약)</th></tr></thead>
+    <tbody>
+      <tr><td>성인 ×4</td><td class="r">1,500,000 ×4</td><td class="r">약 342,600</td></tr>
+      <tr><td>6세(107cm) ×1</td><td class="r">1,100,000</td><td class="r">약 62,800</td></tr>
+      <tr><td>19개월</td><td class="r">무료</td><td class="r">0</td></tr>
+      <tr><td class="strong">합계</td><td class="r strong">7,100,000</td><td class="r strong">약 405,000</td></tr>
+    </tbody>
+  </table>
+  <div class="warn">사파리(10/9)·빈원더스(10/10) 날짜 분산 → <span class="strong">콤보 2일 유효</span> 확인 후 구매. 안 되면 단권 2세트. (단권 합산 대비 약 8.3만 저렴)</div>
 </div>
 
 <!-- BUDGET -->
-<div class="panel" id="budget">
-  <div class="card">
-    <h2>✈️ 확정 항공편 (발권 완료)</h2>
-    <table>
-      <thead><tr><th>구간</th><th>편명 · 항공사</th><th>일정 (현지시각)</th></tr></thead>
-      <tbody>
-        <tr><td>가는편<br>인천 → 푸꾸옥</td><td><strong>TW055</strong><br>티웨이항공 (직항)</td><td>10/6(화) 19:50 ICN 출발<br>10/6(화) 23:35 PQC 도착<br><span style="color:#6b7280;font-size:12px">B737 MAX 8 · 5h45</span></td></tr>
-        <tr><td>오는편<br>푸꾸옥 → 인천</td><td><strong>VJ976</strong><br>비엣젯항공 (직항)</td><td>10/10(토) 20:35 PQC 출발<br>10/11(일) 04:00 ICN 도착<br><span style="color:#6b7280;font-size:12px">A320 · 5h25 · 레드아이</span></td></tr>
-      </tbody>
-    </table>
-    <div class="budget-total">💵 항공 총액: 3,160,800원 (6인 왕복, 발권 완료)</div>
-    <div class="callout tip">운임 1,553,300 + 세금·수수료 1,514,800 + 발권수수료 50,000 + 추가수하물 42,700원. 성인 4 + 6세 1(성인운임) + 유아 1 기준.</div>
-  </div>
-  <div class="card">
-    <h2>🏨 확정 숙박 (예약 완료)</h2>
-    <table>
-      <thead><tr><th>숙소</th><th>숙박일</th><th>객실</th><th>금액(대략)</th></tr></thead>
-      <tbody>
-        <tr><td><strong>노보텔 푸꾸옥</strong><br>4성 · 중부 롱비치</td><td>10/6~10/8<br>(2박)</td><td>1박차: 트윈 2객실<br>2박차: 방갈로(프라이빗풀)+가든더블</td><td>≈113만</td></tr>
-        <tr><td><strong>빈펄 원더월드</strong><br>5성 · 북부 가인다우</td><td>10/8~10/10<br>(2박)</td><td>2베드룸 프라이빗풀 빌라 1채</td><td>≈81만</td></tr>
-      </tbody>
-    </table>
-    <div class="budget-total">💵 숙박 총액: 약 194만원 (4박, 조식·무료취소 포함)</div>
-    <div class="callout tip">확정 결제액은 노보텔 USD 813 / 빈펄 VND 15.0M. 실제 카드 청구액은 결제일(10/3~4) 환율로 정산됨.</div>
-  </div>
-  <div class="card">
-    <h2>💰 예산 재산정 (성인 4 + 유아 2)</h2>
-    <table>
-      <thead><tr><th>항목</th><th>금액</th><th>비고</th></tr></thead>
-      <tbody>
-        <tr><td>항공 (TW055/VJ976, 확정)</td><td>316만</td><td>발권 완료 · 6인 왕복</td></tr>
-        <tr><td>숙박 4박 (노보텔2+빈펄2, 확정)</td><td>약 194만</td><td>예약 완료</td></tr>
-        <tr><td>빈원더스 통합권</td><td>30~40만</td><td>19개월 무료/할인</td></tr>
-        <tr><td>식사·간식</td><td>30~40만</td><td>리조트 식사 비쌈</td></tr>
-        <tr><td>택시·셔틀</td><td>15~20만</td><td>Grab 활용</td></tr>
-        <tr><td>야시장·기념품</td><td>10~15만</td><td></td></tr>
-      </tbody>
-    </table>
-    <div class="budget-total">💵 합계: 약 435~575만원 (5인 기준)</div>
-    <div class="callout warn">항목별 합산 기준. 리조트·항공 옵션에 따라 최대 575만까지 상승 가능.</div>
-  </div>
+<div class="card" id="budget">
+  <h2 class="sec">💰 예산 요약</h2>
+  <table>
+    <thead><tr><th>항목</th><th class="r">금액</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>항공 (6인 왕복)</td><td class="r">3,160,800</td><td>발권 완료 · TW055/VJ976</td></tr>
+      <tr><td>숙박 (노보텔2+빈펄2)</td><td class="r">약 1,940,000</td><td>예약 완료</td></tr>
+      <tr><td>빈원더스+사파리 콤보</td><td class="r">약 405,000</td><td>예매 예정</td></tr>
+      <tr><td>마사지 (성인 4)</td><td class="r">약 100,000</td><td>Day5</td></tr>
+      <tr><td>공항 픽업 서비스</td><td class="r">약 40,000</td><td>Day5 밴</td></tr>
+      <tr><td>식비·그랩·야시장·기타</td><td class="r">약 600,000</td><td>추정</td></tr>
+    </tbody>
+  </table>
+  <div class="total">💵 총합: 약 625만원</div>
+  <div class="note">항공·숙박은 확정 결제액, 나머지는 추정. 원화 환산·현지 지출은 환율에 따라 변동.</div>
 </div>
 
 <!-- CHECKLIST -->
-<div class="panel" id="checklist">
-
-  <!-- ① 예약 트래커 -->
-  <div class="card">
-    <h2>📬 예약 트래커 <span style="font-size:12px;font-weight:400;color:#6b7280;margin-left:4px">Gmail 실시간 확인</span></h2>
-    <div class="tracker-grid" id="tracker-grid">
-      <div class="tracker-item loading" id="tr-flight">
-        <div class="ti-label">✈️ 항공</div>
-        <div class="ti-status"><span class="spinner"></span>확인 중...</div>
-      </div>
-      <div class="tracker-item loading" id="tr-hotel">
-        <div class="ti-label">🏨 숙소</div>
-        <div class="ti-status"><span class="spinner"></span>확인 중...</div>
-      </div>
-      <div class="tracker-item loading" id="tr-vinwonders">
-        <div class="ti-label">🎢 빈원더스</div>
-        <div class="ti-status"><span class="spinner"></span>확인 중...</div>
-      </div>
-      <div class="tracker-item loading" id="tr-insurance">
-        <div class="ti-label">🛡️ 여행자보험</div>
-        <div class="ti-status"><span class="spinner"></span>확인 중...</div>
-      </div>
-    </div>
-    <div style="font-size:12px;color:#9ca3af;margin-top:10px">Gmail에서 최근 1년 내 관련 메일을 검색합니다.</div>
-  </div>
-
-  <div class="card">
-    <h2>👶 19개월 아기 준비물</h2>
-    <div class="checklist">
-      <label><input type="checkbox" data-key="baby-1"><span>즉석밥·김·이유식 파우치 (현지 조달 어려움)</span></label>
-      <label><input type="checkbox" data-key="baby-2"><span>손소독·물티슈 다량·기저귀</span></label>
-      <label><input type="checkbox" data-key="baby-3"><span>해열제(시럽)·지사제·모기물림 연고·밴드</span></label>
-      <label><input type="checkbox" data-key="baby-4"><span><strong>방수기저귀</strong> (필수, 현지 구하기 힘듦)</span></label>
-      <label><input type="checkbox" data-key="baby-5"><span>베이비 래쉬가드·유아용 선크림 SPF50·모자</span></label>
-      <label><input type="checkbox" data-key="baby-6"><span>경량 유모차 (휴대수하물 가능 모델)</span></label>
-    </div>
-  </div>
-  <div class="card">
-    <h2>📋 예약 순서</h2>
-    <div class="checklist">
-      <label><input type="checkbox" data-key="book-1"><span><strong>1. 항공권</strong> — D-90 이상이면 베트젯 프로모</span></label>
-      <label><input type="checkbox" data-key="book-2"><span><strong>2. 리조트</strong> — 취소 가능 옵션으로 일단 잡기</span></label>
-      <label><input type="checkbox" data-key="book-3"><span><strong>3. 빈원더스 티켓</strong> — KKday/클룩 20~30% 할인</span></label>
-      <label><input type="checkbox" data-key="book-4"><span><strong>4. 여행자보험</strong> — 출국 전날까지</span></label>
-      <label><input type="checkbox" data-key="book-5"><span><strong>5. 공항 픽업</strong> — 5인+유모차+캐리어 → 밴 필수</span></label>
-    </div>
-  </div>
-  <div class="card">
-    <h2>💑 와이프 검토 포인트</h2>
-    <div class="checklist">
-      <label><input type="checkbox" data-key="rev-1"><span>아버님 동행 여부 → 방 1개 vs 2개</span></label>
-      <label><input type="checkbox" data-key="rev-2"><span>빈원더스 1일 vs 2일 → 리조트 위치 영향</span></label>
-      <label><input type="checkbox" data-key="rev-3"><span>패밀리룸 vs 커넥팅룸 → 부모님 합방 여부</span></label>
-      <label><input type="checkbox" data-key="rev-4"><span>인천→공항 카니발 콜밴 예약</span></label>
-    </div>
-  </div>
+<div class="card" id="check">
+  <h2 class="sec">✅ 예약 · 준비 체크리스트</h2>
+  <ul class="chk">
+    <li>빈원더스+사파리 콤보 예매 (사파리 10/9 / 빈원더스 10/10, <span class="strong">2일 유효 확인</span>)</li>
+    <li>노보텔 공항 픽업 편명 전달 (도착 24시간 전)</li>
+    <li>빈펄 원더월드 베이비코트 사전 요청 + 얼리체크인 문의</li>
+    <li>Day5 마사지 예약 (중부 스파, 16:45~17:45 / 가족)</li>
+    <li>Day5 공항 픽업 서비스(밴) 예약 (17:45 픽업)</li>
+    <li>그랩 앱 + 베트남 eSIM</li>
+    <li>우비 · 유아 선크림 · 래쉬가드 · 방수기저귀</li>
+  </ul>
+  <div class="warn">🌧️ 10월 푸꾸옥은 우기 끝물 — 스콜 대비 우산·우비 필수</div>
 </div>
 
-<!-- ② 캘린더 등록 -->
-<div class="panel" id="calendar">
-  <div class="card">
-    <h2>📅 캘린더 등록</h2>
-    <p style="font-size:14px;color:#4b5563;margin-bottom:14px">
-      출발일을 선택하면 Day1~4 일정 블록을 <strong>simha0908@gmail.com</strong> 캘린더에 개별 이벤트로 자동 등록합니다.<br>
-      <span style="font-size:12px;color:#9ca3af">Day1 인천 출발만 서울 시간대(KST), 나머지는 현지 시간대(UTC+7).</span>
-    </p>
-    <div class="cal-input-row">
-      <label for="dep-date">✈️ 출발일 (Day 1)</label>
-      <input type="date" id="dep-date" min="2026-01-01">
-      <button class="btn-primary" id="cal-btn" disabled>캘린더에 등록</button>
-    </div>
-    <div class="day-dates" id="day-dates-preview"></div>
-    <div id="cal-status-box" style="display:none" class="cal-status"></div>
-    <div class="cal-progress" id="cal-progress"></div>
-  </div>
-  <div class="card">
-    <h2>📌 등록 예정 이벤트 (총 18개)</h2>
-    <table>
-      <thead><tr><th>Day</th><th>이벤트</th><th>시간</th><th>시간대</th></tr></thead>
-      <tbody>
-        <tr><td>Day 1</td><td>✈️ 인천 출발 → 푸꾸옥</td><td>19:30~24:00</td><td>서울</td></tr>
-        <tr><td>Day 1</td><td>🏨 리조트 체크인</td><td>22:30~24:00</td><td>현지</td></tr>
-        <tr><td>Day 2</td><td>🍽️ 호텔 조식</td><td>08:00~09:30</td><td>현지</td></tr>
-        <tr><td>Day 2</td><td>🏖️ 리조트 키즈풀+비치</td><td>09:30~12:00</td><td>현지</td></tr>
-        <tr><td>Day 2</td><td>😴 아기 낮잠/어른 휴식 ⚠️사수</td><td>12:30~14:30</td><td>현지</td></tr>
-        <tr><td>Day 2</td><td>🏊 풀빌라/메인풀</td><td>15:00~17:00</td><td>현지</td></tr>
-        <tr><td>Day 2</td><td>🦐 즈엉동 야시장</td><td>18:30~20:30</td><td>현지</td></tr>
-        <tr><td>Day 3</td><td>🍳 조식</td><td>07:30~08:30</td><td>현지</td></tr>
-        <tr><td>Day 3</td><td>🌊 빈원더스 워터파크</td><td>09:30~12:30</td><td>현지</td></tr>
-        <tr><td>Day 3</td><td>🍜 파크 낮잠+식사</td><td>12:30~14:00</td><td>현지</td></tr>
-        <tr><td>Day 3</td><td>🦁 사파리/어뮤즈먼트</td><td>14:00~17:00</td><td>현지</td></tr>
-        <tr><td>Day 3</td><td>🍽️ 리조트 디너</td><td>19:00~20:30</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>🍳 조식·여유</td><td>08:30~10:00</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>🏨 체크아웃 (짐 보관)</td><td>10:00~10:30</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>🚡 혼똔섬 케이블카</td><td>10:30~12:30</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>🍽️ 선셋타운 점심</td><td>13:00~14:30</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>🏊 리조트 풀·샤워실</td><td>14:30~16:30</td><td>현지</td></tr>
-        <tr><td>Day 4</td><td>✈️ 공항 이동·출국</td><td>17:00~21:30</td><td>현지</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<footer>
+  푸꾸옥 가족여행 · 4박5일 · 확인 기준 항공·숙박 예약 완료 상태<br>
+  모든 가격은 변동 가능, 예약 직전 재확인
+</footer>
 
-<!-- ③ Q&A -->
-<div class="panel" id="qa">
-  <div class="card">
-    <h2>🤔 여행 Q&A</h2>
-    <p style="font-size:14px;color:#4b5563;margin-bottom:14px">이 여행 일정 맥락으로 뭐든 물어봐.</p>
-    <div class="qa-chips">
-      <button class="qa-chip" data-q="Day3에 비가 오면 대안 일정은 어떻게 짜는 게 좋을까?">🌧️ Day3 비 오면 대안?</button>
-      <button class="qa-chip" data-q="예산 200만원을 줄이려면 어디서 절약하는 게 현실적일까?">💸 예산 200만 줄이려면?</button>
-      <button class="qa-chip" data-q="19개월 아기 데리고 빈원더스 가는 게 무리일까? 현실적으로 어때?">👶 19개월 빈원더스 무리?</button>
-    </div>
-    <div class="qa-input-row">
-      <input type="text" id="qa-input" placeholder="질문을 입력하세요..." maxlength="200">
-      <button class="btn-primary" id="qa-btn">물어보기</button>
-    </div>
-    <div class="qa-answer" id="qa-answer">
-      <span class="qa-placeholder">답변이 여기에 표시됩니다.</span>
-    </div>
-  </div>
-</div>
-
-<div class="summary">
-  <strong>📌 한 줄 요약:</strong> 19개월 낮잠 사수 + 하루 1 액티비티 원칙으로 무리하지 않는 3박 4일.
-  JW 메리어트 베이스로 Day2 리조트 / Day3 빈원더스 / Day4 선셋타운 구성이 가성비·체력·만족도 균형점.
-</div>
-
-<script>
-// ─────────────────────────────────────────
-//  SHARED DATA
-// ─────────────────────────────────────────
-// 실제 푸꾸옥 지형 기반 외곽선 (viewBox 360x600) — 북부 넓고 남부로 가늘어지는 형태
-const ISLAND_PATH = 'M227,67 L254,85 L281,122 L284,155 L274,192 L267,235 L264,289 L254,309 L240,352 L234,386 L227,429 L220,462 L217,489 L214,503 L200,479 L187,429 L180,386 L174,352 L160,329 L147,309 L144,289 L147,265 L134,242 L120,222 L107,209 L87,195 L67,182 L57,169 L50,155 L60,142 L87,128 L120,115 L154,102 L187,85 L207,72 Z';
-
-const MD = {
-  'am-airport': { x:205, y:355, r:13, color:'#6b7280', lbl:'✈',  name:'푸꾸옥 국제공항',   desc:'남부 동안 · 출도착 기준점',       lx:218, ly:352, mc:'#6b7280', mb:'#f9fafb', addr:'즈엉떠, 푸꾸옥 (남부 동안)',     coord:'≈10.177, 103.993', q:'Phu Quoc International Airport' },
-  'hm-jw':      { x:219, y:459, r:14, color:'#4338ca', lbl:'H1', name:'JW 메리어트',        desc:'남단 바이켐 · 40~80만원/박',     lx:122, ly:457, mc:'#4338ca', mb:'#eef2ff', addr:'바이켐 비치, 안터이 (남단)',     coord:'≈10.044, 104.019', q:'JW Marriott Phu Quoc Emerald Bay' },
-  'hm-ihg':     { x:152, y:300, r:14, color:'#7c3aed', lbl:'H2', name:'인터컨티넨탈',       desc:'롱비치 서안 · 35~70만원/박',     lx:74,  ly:298, mc:'#7c3aed', mb:'#f5f3ff', addr:'바이쯔엉(롱비치), 서안',         coord:'≈10.153, 103.970', q:'InterContinental Phu Quoc Long Beach Resort' },
-  'hm-melia':   { x:75,  y:175, r:14, color:'#0e7490', lbl:'H3', name:'멜리아 빈펄',        desc:'북서부 가인다우 · 빈원더스 근접', lx:6,   ly:173, mc:'#0e7490', mb:'#ecfeff', addr:'가인다우, 북서부',               coord:'≈10.330, 103.855', q:'Vinpearl Resort Phu Quoc' },
-  'am-1':       { x:98,  y:162, r:13, color:'#dc2626', lbl:'1',  name:'빈원더스',           desc:'워터파크+사파리 · 북서부 · Day3',lx:112, ly:159, mc:'#dc2626', mb:'#fef2f2', addr:'가인다우, 북서부',               coord:'≈10.335, 103.858', q:'VinWonders Phu Quoc' },
-  'am-2':       { x:212, y:492, r:13, color:'#dc2626', lbl:'2',  name:'선월드 케이블카',   desc:'세계 최장 · 남단 안터이 · Day4', lx:116, ly:495, mc:'#dc2626', mb:'#fef2f2', addr:'바이덧도, 안터이 (남단)',       coord:'≈10.023, 104.016', q:'Sun World Hon Thom An Thoi Station' },
-  'am-3':       { x:160, y:270, r:12, color:'#ea580c', lbl:'3',  name:'즈엉동 야시장',     desc:'해산물 BBQ · 서중부 · Day2 저녁',lx:90,  ly:267, mc:'#ea580c', mb:'#fff7ed', addr:'즈엉동 시내, 서중부',           coord:'≈10.213, 103.957', q:'Phu Quoc Night Market Dinh Cau' },
-  'am-4':       { x:115, y:178, r:12, color:'#ea580c', lbl:'4',  name:'그랜드 월드',       desc:'베네치아 야경 · 북서부',         lx:130, ly:176, mc:'#ea580c', mb:'#fff7ed', addr:'가인다우, 북서부',               coord:'≈10.327, 103.850', q:'Grand World Phu Quoc' },
-  'am-5':       { x:222, y:425, r:12, color:'#ea580c', lbl:'5',  name:'사오 비치',         desc:'에메랄드 백사장 · 남동부',       lx:236, ly:423, mc:'#ea580c', mb:'#fff7ed', addr:'바이사오, 남동부',               coord:'≈10.059, 104.029', q:'Bai Sao Beach Phu Quoc' },
-  'am-6':       { x:90,  y:195, r:12, color:'#d97706', lbl:'6',  name:'코랄 오션 파크',    desc:'실내 수족관 · 우천 플랜B',       lx:18,  ly:196, mc:'#d97706', mb:'#fffbeb', addr:'⚠️ 위치 미확정 (재확인 필요)',    coord:'미상',           q:'Phu Quoc aquarium' },
-  'am-7':       { x:199, y:474, r:11, color:'#16a34a', lbl:'7',  name:'선셋 타운',         desc:'케이블카 연계 · 남단 · Day4 점심',lx:120, ly:474, mc:'#16a34a', mb:'#f0fdf4', addr:'안터이 (남단), 케이블카 인접',   coord:'≈10.023, 104.015', q:'Sunset Town Phu Quoc' },
-};
-
-const TT = {
-  'am-1|am-2':'50분','am-1|am-3':'20분','am-1|am-4':'5분','am-1|am-5':'55분','am-1|am-6':'5분','am-1|am-7':'55분',
-  'am-1|hm-jw':'55분','am-1|hm-ihg':'30분','am-1|hm-melia':'10분','am-1|am-airport':'45분',
-  'am-2|am-3':'35분','am-2|am-4':'50분','am-2|am-5':'20분','am-2|am-6':'50분','am-2|am-7':'5분',
-  'am-2|hm-jw':'10분','am-2|hm-ihg':'30분','am-2|hm-melia':'45분','am-2|am-airport':'30분',
-  'am-3|am-4':'25분','am-3|am-5':'35분','am-3|am-6':'25분','am-3|am-7':'35분',
-  'am-3|hm-jw':'30분','am-3|hm-ihg':'5분','am-3|hm-melia':'20분','am-3|am-airport':'20분',
-  'am-4|am-5':'55분','am-4|am-6':'5분','am-4|am-7':'50분',
-  'am-4|hm-jw':'50분','am-4|hm-ihg':'25분','am-4|hm-melia':'10분','am-4|am-airport':'45분',
-  'am-5|am-6':'55분','am-5|am-7':'20분','am-5|hm-jw':'25분','am-5|hm-ihg':'30분','am-5|hm-melia':'55분','am-5|am-airport':'20분',
-  'am-6|am-7':'50분','am-6|hm-jw':'50분','am-6|hm-ihg':'25분','am-6|hm-melia':'8분','am-6|am-airport':'45분',
-  'am-7|hm-jw':'8분','am-7|hm-ihg':'35분','am-7|hm-melia':'50분','am-7|am-airport':'30분',
-  'hm-jw|hm-ihg':'25분','hm-jw|hm-melia':'50분','hm-jw|am-airport':'25분',
-  'hm-ihg|hm-melia':'25분','hm-ihg|am-airport':'20분',
-  'hm-melia|am-airport':'45분',
-};
-
-const DAY_CFG = {
-  main: { cards: ['am-airport','hm-jw','hm-ihg','hm-melia','am-1','am-2','am-3','am-4','am-5','am-6','am-7'], pre: [] },
-  d1:   { cards: ['am-airport','hm-jw','hm-ihg','hm-melia'], pre: ['am-airport','hm-jw'],
-          tip: '✈️ 늦은 도착. 공항→호텔 이동시간 확인 후 밴/택시 예약. 첫날은 무조건 직행 취침.' },
-  d2:   { cards: ['hm-jw','hm-ihg','hm-melia','am-3','am-5','am-4'], pre: ['hm-jw','am-3'],
-          tip: '🏖 리조트 베이스의 날. 야시장 or 사오비치 중 하나. 낮잠 12:30~14:30 사수.' },
-  d3:   { cards: ['hm-jw','hm-ihg','hm-melia','am-1','am-4','am-6'], pre: ['hm-jw','am-1'],
-          tip: '🎢 빈원더스 체력전. 멜리아(H3) 기준 10분, JW(H1) 기준 55분 — 호텔 선택이 동선에 직결.' },
-  d4:   { cards: ['hm-jw','hm-ihg','hm-melia','am-2','am-7','am-5','am-airport'], pre: ['hm-jw','am-2','am-7','am-airport'],
-          tip: '🌅 체크아웃 후 남부 동선. 공항 도착 역산 필수 — 혼똔→선셋→호텔→공항 총 이동시간 확인.' },
-};
-
-// ─────────────────────────────────────────
-//  MAP ENGINE
-// ─────────────────────────────────────────
-const SVG_NS = 'http://www.w3.org/2000/svg';
-const mapInstances = {};
-
-function svgEl(tag, attrs) {
-  const e = document.createElementNS(SVG_NS, tag);
-  Object.entries(attrs || {}).forEach(([k, v]) => e.setAttribute(k, v));
-  return e;
-}
-function svgText(text, attrs) {
-  const e = svgEl('text', attrs);
-  e.textContent = text;
-  return e;
-}
-function getTime(a, b) {
-  // TT 키 저장 순서가 일정치 않아 양방향 모두 조회
-  return TT[`${a}|${b}`] || TT[`${b}|${a}`] || '?';
-}
-
-function buildSVG(prefix) {
-  const svg = svgEl('svg', { width:'360', height:'600', viewBox:'0 0 360 600' });
-  svg.appendChild(svgEl('rect', { width:'360', height:'600', fill:'#a8d8ea' }));
-  svg.appendChild(svgEl('path', { d:ISLAND_PATH, fill:'#d4edda', stroke:'#7cb87e', 'stroke-width':'1.5' }));
-
-  const c = svgEl('g', { transform:'translate(322,26)' });
-  c.appendChild(svgEl('circle', { cx:'0',cy:'0',r:'14',fill:'white','fill-opacity':'0.85',stroke:'#ccc','stroke-width':'1' }));
-  c.appendChild(svgText('N', { x:'0',y:'-5','text-anchor':'middle','font-size':'10','font-weight':'700',fill:'#374151' }));
-  c.appendChild(svgEl('polygon', { points:'0,-10 2,-3 0,-1 -2,-3', fill:'#ef4444' }));
-  c.appendChild(svgEl('polygon', { points:'0,10 2,3 0,1 -2,3', fill:'#9ca3af' }));
-  svg.appendChild(c);
-
-  const sc = svgEl('g', { transform:'translate(18,574)' });
-  sc.appendChild(svgEl('rect', { x:'0',y:'0',width:'60',height:'6',fill:'none',stroke:'#555','stroke-width':'1.5' }));
-  sc.appendChild(svgEl('rect', { x:'0',y:'0',width:'30',height:'6',fill:'#555' }));
-  sc.appendChild(svgText('0',    { x:'0', y:'18','font-size':'9',fill:'#374151' }));
-  sc.appendChild(svgText('15km', { x:'18',y:'18','font-size':'9',fill:'#374151' }));
-  sc.appendChild(svgText('30',   { x:'52',y:'18','font-size':'9',fill:'#374151' }));
-  svg.appendChild(sc);
-
-  svg.appendChild(svgEl('g', { id:`${prefix}-lines` }));
-
-  Object.keys(MD).forEach(mid => {
-    const m = MD[mid];
-    const g = svgEl('g', { id:`${prefix}-m-${mid}` });
-    const pr = svgEl('circle', { cx:m.x, cy:m.y, r:m.r+5, stroke:m.color, fill:'none', 'stroke-width':'2', class:'pulse-ring' });
-    pr.style.display = 'none';
-    g.appendChild(pr);
-    g.appendChild(svgEl('circle', { cx:m.x, cy:m.y, r:m.r, fill:m.color, stroke:'white', 'stroke-width':'2.5' }));
-    g.appendChild(svgText(m.lbl, { x:m.x, y:m.y+4, 'text-anchor':'middle', 'font-size': m.r >= 13 ? '10':'11', 'font-weight':'700', fill:'white' }));
-    svg.appendChild(g);
-    svg.appendChild(svgText(m.name, { x:m.lx, y:m.ly, 'font-size':'10.5', fill:'#111', 'font-weight':'700', stroke:'white', 'stroke-width':'3.5', 'paint-order':'stroke fill' }));
-  });
-
-  return svg;
-}
-
-function buildCards(container, cardIds) {
-  container.innerHTML = '';
-  cardIds.forEach(mid => {
-    const m = MD[mid];
-    if (!m) return;
-    const d = document.createElement('div');
-    d.className = 'map-card';
-    d.dataset.marker = mid;
-    d.style.cssText = `--mc:${m.mc};--mb:${m.mb}`;
-    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.q)}`;
-    d.innerHTML = `<div class="map-badge" style="background:${m.color}">${m.lbl}</div>
-      <div class="map-card-body">
-        <div class="map-name">${m.name}</div>
-        <div class="map-desc">${m.desc}</div>
-        <div class="map-addr">📍 ${m.addr} <span class="map-coord">${m.coord}</span></div>
-      </div>
-      <a class="map-gmap-link" href="${mapUrl}" target="_blank" rel="noopener" title="구글맵에서 ${m.name} 열기">지도↗</a>`;
-    container.appendChild(d);
-  });
-  // 구글맵 길찾기 버튼 (컨테이너 재생성 시에도 항상 유지)
-  const prefix = container.id.replace('-cards', '');
-  const dirBtn = document.createElement('a');
-  dirBtn.id = `${prefix}-dir`;
-  dirBtn.className = 'dir-btn';
-  dirBtn.target = '_blank';
-  dirBtn.rel = 'noopener';
-  dirBtn.style.display = 'none';
-  container.appendChild(dirBtn);
-}
-
-function renderLines(prefix, active) {
-  const g = document.getElementById(`${prefix}-lines`);
-  if (!g) return;
-  g.innerHTML = '';
-  if (active.length < 2) return;
-  for (let i = 0; i < active.length - 1; i++) {
-    const a = MD[active[i]], b = MD[active[i+1]];
-    if (!a || !b) continue;
-    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
-    const label = getTime(active[i], active[i+1]);
-    g.appendChild(svgEl('line', { x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'#f59e0b','stroke-width':'2','stroke-dasharray':'5,3',opacity:'0.9' }));
-    const w = label.length * 7 + 12;
-    g.appendChild(svgEl('rect', { x:mx-w/2, y:my-9, width:w, height:16, rx:'5', fill:'#f59e0b', stroke:'white','stroke-width':'1.5' }));
-    g.appendChild(svgText(label, { x:mx, y:my+3, 'text-anchor':'middle','font-size':'9.5','font-weight':'700',fill:'white' }));
-  }
-}
-
-function applyState(prefix, active) {
-  const activeSet = new Set(active);
-  const hasAny = active.length > 0;
-  Object.keys(MD).forEach(mid => {
-    const mg = document.getElementById(`${prefix}-m-${mid}`);
-    if (mg) {
-      mg.style.opacity = hasAny ? (activeSet.has(mid) ? '1' : '0.18') : '1';
-      const pr = mg.querySelector('.pulse-ring');
-      if (pr) pr.style.display = activeSet.has(mid) ? '' : 'none';
-    }
-  });
-  const container = document.getElementById(`${prefix}-cards`);
-  if (container) {
-    container.querySelectorAll('.map-card').forEach(c => {
-      c.classList.toggle('active', activeSet.has(c.dataset.marker));
-    });
-  }
-  renderLines(prefix, active);
-
-  // 구글맵 길찾기 버튼 상태 갱신
-  const dirBtn = document.getElementById(`${prefix}-dir`);
-  if (dirBtn) {
-    const url = buildDirectionsUrl(active);
-    if (url) {
-      dirBtn.style.display = '';
-      dirBtn.href = url;
-      dirBtn.textContent = `🧭 이 동선 구글맵 길찾기 (${active.length}곳)`;
-    } else {
-      dirBtn.style.display = 'none';
-    }
-  }
-
-  // Day별 선택이 바뀌면 개요 일정 + 해당 Day 타임라인 즉시 갱신
-  if (/^d[1-4]$/.test(prefix)) {
-    renderOverviewSchedule();
-    if (/^d[2-4]$/.test(prefix)) renderDayTimeline(prefix);
-  }
-}
-
-// 개요 탭 "한눈에 보는 일정" — Day별 선택 장소를 텍스트로 자동 정리
-const DAY_THEME = { d1:'도착·안착', d2:'리조트 적응', d3:'액티비티', d4:'마무리·출국' };
-function renderOverviewSchedule() {
-  const el = document.getElementById('overview-schedule');
-  if (!el) return;
-  let html = '';
-  ['d1','d2','d3','d4'].forEach((dk, i) => {
-    const inst = mapInstances[dk];
-    const active = inst ? inst.active : [];
-    const names = active.map(mid => MD[mid] ? MD[mid].name : '').filter(Boolean);
-    const dir = buildDirectionsUrl(active);
-    html += `<div class="ov-day">
-      <div class="ov-day-head"><span class="ov-day-no">Day ${i+1}</span><span class="ov-day-theme">${DAY_THEME[dk]}</span></div>`;
-    if (names.length) {
-      html += `<div class="ov-day-route">${names.join(' <span class="ov-arrow">→</span> ')}</div>`;
-      if (dir) html += `<a class="ov-dir" href="${dir}" target="_blank" rel="noopener">🧭 이 동선 구글맵 길찾기</a>`;
-    } else {
-      html += `<div class="ov-day-empty">아직 선택 없음 — 전체지도에서 장소를 골라 'Day ${i+1}'에 저장하세요</div>`;
-    }
-    html += `</div>`;
-  });
-  el.innerHTML = html;
-}
-
-// ─────────────────────────────────────────
-//  DAY 타임라인 — 고정 골격 + 선택 장소 자동 배치 (Day2~4)
-// ─────────────────────────────────────────
-const DEFAULT_ANCHORS = { breakfast:'08:00', morningStart:'09:30', napStart:'12:30', napEnd:'14:30', bedtime:'21:30' };
-function loadAnchors() {
-  try { const s = JSON.parse(localStorage.getItem('pq-anchors') || 'null'); return Object.assign({}, DEFAULT_ANCHORS, s || {}); }
-  catch(e) { return { ...DEFAULT_ANCHORS }; }
-}
-let ANCHORS = loadAnchors();
-const PLACE_DUR = { 'am-airport':30, 'hm-jw':0, 'hm-ihg':0, 'hm-melia':0, 'am-1':240, 'am-2':150, 'am-3':120, 'am-4':120, 'am-5':150, 'am-6':90, 'am-7':120 };
-const placeDur = id => (PLACE_DUR[id] != null ? PLACE_DUR[id] : 90);
-const isHotel = id => id && id.indexOf('hm-') === 0;
-const t2m = t => { const [h,m] = t.split(':').map(Number); return h*60 + m; };
-const m2t = m => `${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`;
-function travelMin(a, b) { const n = parseInt(getTime(a, b), 10); return isNaN(n) ? 0 : n; }
-
-function buildDayTimeline(dk) {
-  const inst = mapInstances[dk];
-  const active = inst ? [...inst.active] : [];
-  const A = ANCHORS;
-  const breakfast = t2m(A.breakfast), morningStart = t2m(A.morningStart),
-        napStart = t2m(A.napStart), napEnd = t2m(A.napEnd), bedtime = t2m(A.bedtime);
-  const napDur = Math.max(30, napEnd - napStart);
-  const items = [];
-  items.push({ t: breakfast, end: morningStart, label: '🍳 호텔 조식' });
-
-  const napBlock = () => ({ t: napStart, end: napStart+napDur, label: '😴 아기 낮잠 / 어른 휴식', tag: '사수' });
-  let clock = morningStart, prev = null, napDone = false;
-  const addVisit = (m, dur) => {
-    // 방문이 낮잠 시간을 가로지르면 (오전)/(이어서)로 분할
-    if (!napDone && clock < napStart && clock + dur > napStart) {
-      const part1 = napStart - clock;
-      if (part1 > 0) items.push({ t: clock, end: napStart, label: `📍 ${m.name} (오전)`, note: m.desc });
-      items.push(napBlock()); napDone = true; clock = napStart + napDur;
-      const rem = dur - part1;
-      if (rem > 0) { items.push({ t: clock, end: clock+rem, label: `📍 ${m.name} (이어서)` }); clock += rem; }
-      return;
-    }
-    // 낮잠 시작 이후 도착 & 낮잠 미배치 → 낮잠 먼저
-    if (!napDone && clock >= napStart) { items.push(napBlock()); napDone = true; clock = Math.max(clock, napStart+napDur); }
-    items.push({ t: clock, end: clock+dur, label: `📍 ${m.name}`, note: m.desc }); clock += dur;
-  };
-  active.forEach(id => {
-    const m = MD[id]; if (!m) return;
-    if (isHotel(id)) {
-      if (prev === null) items.push({ t: clock, label: `🏨 ${m.name} 출발` });
-      prev = id; return;
-    }
-    if (prev) { const tv = travelMin(prev, id); if (tv > 0) { items.push({ t: clock, end: clock+tv, label: `🚕 이동 → ${m.name}`, travel: true }); clock += tv; } }
-    addVisit(m, placeDur(id)); prev = id;
-  });
-  if (!napDone) items.push(napBlock());
-  items.push({ t: bedtime, label: '🌙 취침' });
-
-  items.sort((a, b) => a.t - b.t);
-  return items;
-}
-
-function renderDayTimeline(dk) {
-  const el = document.getElementById(`${dk}-timeline`);
-  if (!el) return;
-  const items = buildDayTimeline(dk);
-  const hasPlace = (mapInstances[dk]?.active || []).some(id => !isHotel(id));
-  let html = '';
-  if (!hasPlace) html += `<div class="tl-empty">🗺️ 전체지도에서 장소를 골라 '${dk.toUpperCase()}'에 저장하면 타임라인이 자동 생성됩니다.</div>`;
-  html += items.map(it => {
-    const time = it.end != null ? `${m2t(it.t)}~${m2t(it.end)}` : m2t(it.t);
-    const tag = it.tag ? ` <span class="tag tag-must">${it.tag}</span>` : '';
-    const note = it.note ? `<div class="note">${it.note}</div>` : '';
-    return `<div class="timeline-item${it.travel ? ' tl-travel' : ''}"><div class="time">${time}</div><div class="activity">${it.label}${tag}</div>${note}</div>`;
-  }).join('');
-  el.innerHTML = html;
-}
-function renderAllTimelines() { ['d2','d3','d4'].forEach(renderDayTimeline); }
-
-function initMap(prefix, boxId, cardsId, cardIds, preSelected, tip) {
-  const box = document.getElementById(boxId);
-  const cardsEl = document.getElementById(cardsId);
-  if (!box || !cardsEl) return;
-
-  let initActive = [...preSelected];
-  if (prefix !== 'main') {
-    try {
-      const saved = JSON.parse(localStorage.getItem(`pq-route-${prefix}`) || 'null');
-      if (Array.isArray(saved) && saved.length) initActive = saved;
-    } catch(e) {}
-  }
-
-  box.appendChild(buildSVG(prefix));
-  const displayIds = [...new Set([...initActive, ...cardIds])];
-  buildCards(cardsEl, displayIds);
-
-  const active = initActive;
-  mapInstances[prefix] = { active, cardIds, cardsId };
-  applyState(prefix, active);
-
-  if (tip) {
-    const tipEl = document.getElementById(`${prefix}-tip`);
-    if (tipEl) tipEl.textContent = tip;
-  }
-
-  cardsEl.addEventListener('click', e => {
-    // 구글맵 링크 클릭은 동선 토글에서 제외
-    if (e.target.closest('.map-gmap-link')) return;
-    const card = e.target.closest('.map-card');
-    if (!card) return;
-    const mid = card.dataset.marker;
-    const idx = active.indexOf(mid);
-    if (idx !== -1) active.splice(idx, 1); else active.push(mid);
-    applyState(prefix, active);
-  });
-}
-
-// 선택된 동선(active 순서)으로 구글맵 길찾기 URL 생성
-function buildDirectionsUrl(active) {
-  if (active.length < 2) return null;
-  const pts = active.map(mid => encodeURIComponent(MD[mid] ? MD[mid].q : mid));
-  const origin = pts[0];
-  const destination = pts[pts.length - 1];
-  const waypoints = pts.slice(1, -1).join('|');
-  let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
-  if (waypoints) url += `&waypoints=${waypoints}`;
-  return url;
-}
-
-Object.entries(DAY_CFG).forEach(([key, cfg]) => {
-  const boxId   = key === 'main' ? 'main-box'   : `${key}-box`;
-  const cardsId = key === 'main' ? 'main-cards' : `${key}-cards`;
-  initMap(key, boxId, cardsId, cfg.cards, cfg.pre, cfg.tip || '');
-});
-renderOverviewSchedule();
-renderAllTimelines();
-
-// ── 시간 골격(앵커) 입력 동기화 ──
-document.querySelectorAll('input[data-anchor]').forEach(inp => {
-  const k = inp.dataset.anchor;
-  if (ANCHORS[k]) inp.value = ANCHORS[k];
-  inp.addEventListener('change', () => {
-    ANCHORS[k] = inp.value || DEFAULT_ANCHORS[k];
-    try { localStorage.setItem('pq-anchors', JSON.stringify(ANCHORS)); } catch(e) {}
-    renderAllTimelines();
-  });
-});
-const tsReset = document.getElementById('timeset-reset');
-if (tsReset) tsReset.addEventListener('click', () => {
-  ANCHORS = { ...DEFAULT_ANCHORS };
-  try { localStorage.setItem('pq-anchors', JSON.stringify(ANCHORS)); } catch(e) {}
-  document.querySelectorAll('input[data-anchor]').forEach(inp => { inp.value = ANCHORS[inp.dataset.anchor]; });
-  renderAllTimelines();
-});
-
-// ── 추천 루트로 복원 (Day별 기본 동선으로 되돌리기) ──
-function restoreRecommendedRoutes() {
-  ['d1','d2','d3','d4'].forEach(dk => {
-    const cfg = DAY_CFG[dk], inst = mapInstances[dk];
-    if (!cfg || !inst) return;
-    const route = [...cfg.pre];
-    inst.active.length = 0; route.forEach(m => inst.active.push(m));
-    const cardsEl = document.getElementById(inst.cardsId);
-    if (cardsEl) { const displayIds = [...new Set([...route, ...inst.cardIds])]; buildCards(cardsEl, displayIds); }
-    applyState(dk, inst.active);
-    try { localStorage.removeItem(`pq-route-${dk}`); } catch(e) {}
-  });
-  renderOverviewSchedule();
-  renderAllTimelines();
-}
-const restoreBtn = document.getElementById('restore-route-btn');
-if (restoreBtn) {
-  let armed = false, armTimer = null;
-  restoreBtn.addEventListener('click', () => {
-    if (!armed) {
-      armed = true;
-      restoreBtn.textContent = '⚠️ 현재 선택이 추천안으로 덮어써집니다 — 한 번 더 클릭';
-      restoreBtn.classList.add('restore-armed');
-      armTimer = setTimeout(() => { armed = false; restoreBtn.textContent = '🔄 추천 루트로 복원'; restoreBtn.classList.remove('restore-armed'); }, 3500);
-      return;
-    }
-    clearTimeout(armTimer); armed = false;
-    restoreRecommendedRoutes();
-    restoreBtn.textContent = '✅ 추천 루트로 복원됨';
-    restoreBtn.classList.remove('restore-armed');
-    setTimeout(() => { restoreBtn.textContent = '🔄 추천 루트로 복원'; }, 2000);
-  });
-}
-
-// ─────────────────────────────────────────
-//  SAVE TO DAY
-// ─────────────────────────────────────────
-function saveToDayRoute(dayKey) {
-  const mainInst = mapInstances['main'];
-  const dayInst  = mapInstances[dayKey];
-  if (!mainInst || !dayInst) return;
-  const route = [...mainInst.active];
-  dayInst.active.length = 0;
-  route.forEach(m => dayInst.active.push(m));
-  const cardsEl = document.getElementById(dayInst.cardsId);
-  if (cardsEl) {
-    const displayIds = [...new Set([...route, ...dayInst.cardIds])];
-    buildCards(cardsEl, displayIds);
-  }
-  applyState(dayKey, dayInst.active);
-  try { localStorage.setItem(`pq-route-${dayKey}`, JSON.stringify(route)); } catch(e) {}
-}
-
-document.querySelectorAll('.save-day-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const dayKey = btn.dataset.day;
-    if (!mapInstances['main'] || mapInstances['main'].active.length === 0) {
-      btn.textContent = '선택 없음!';
-      setTimeout(() => { btn.textContent = `Day ${dayKey.slice(1)}`; }, 1500);
-      return;
-    }
-    saveToDayRoute(dayKey);
-    btn.textContent = `Day ${dayKey.slice(1)} ✓`;
-    btn.classList.add('saved');
-    setTimeout(() => { btn.textContent = `Day ${dayKey.slice(1)}`; btn.classList.remove('saved'); }, 2000);
-  });
-});
-
-// ─────────────────────────────────────────
-//  TAB SWITCHING
-// ─────────────────────────────────────────
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.tab).classList.add('active');
-    try { localStorage.setItem('pq-tab', tab.dataset.tab); } catch(e) {}
-  });
-});
-try {
-  const saved = localStorage.getItem('pq-tab');
-  if (saved) { const t = document.querySelector(`.tab[data-tab="${saved}"]`); if (t) t.click(); }
-} catch(e) {}
-
-// ─────────────────────────────────────────
-//  CHECKBOX PERSISTENCE
-// ─────────────────────────────────────────
-document.querySelectorAll('input[type="checkbox"][data-key]').forEach(cb => {
-  const key = 'pq-' + cb.dataset.key;
-  try { if (localStorage.getItem(key) === '1') cb.checked = true; } catch(e) {}
-  cb.addEventListener('change', () => {
-    try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch(e) {}
-  });
-});
-
-// ─────────────────────────────────────────
-//  ① CALENDAR PUSH
-// ─────────────────────────────────────────
-function fmtISO(dateObj, hh, mm) {
-  const y  = dateObj.getFullYear();
-  const mo = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const d  = String(dateObj.getDate()).padStart(2, '0');
-  return `${y}-${mo}-${d}T${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:00`;
-}
-function addDays(dateObj, n) {
-  const d = new Date(dateObj); d.setDate(d.getDate() + n); return d;
-}
-function fmtKR(d) {
-  const DOW = ['일','월','화','수','목','금','토'];
-  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${DOW[d.getDay()]})`;
-}
-
-function getEventBlocks(dep) {
-  const d1=dep, d2=addDays(dep,1), d3=addDays(dep,2), d4=addDays(dep,3);
-  return [
-    // Day 1 — 서울 TZ (출발만)
-    { summary:'✈️ [Day1] 인천 출발 → 푸꾸옥', startTime:fmtISO(d1,19,30), endTime:fmtISO(addDays(d1,1),0,30), timeZone:'Asia/Seoul',        colorId:'1', description:'VietJet/Eastar 항공. 19:30 인천 출발 → 22:30 현지 도착(서울 00:30). 기내식 후 아이들 재우기 모드.' },
-    { summary:'🏨 [Day1] 리조트 체크인',        startTime:fmtISO(d1,22,30), endTime:fmtISO(d1,23,59), timeZone:'Asia/Ho_Chi_Minh',  colorId:'1', description:'베이비코트 사전 요청 필수.' },
-    // Day 2
-    { summary:'🍽️ [Day2] 호텔 조식',           startTime:fmtISO(d2,8,0),   endTime:fmtISO(d2,9,30),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'2', description:'여유롭게 리조트 조식.' },
-    { summary:'🏖️ [Day2] 리조트 키즈풀+비치',  startTime:fmtISO(d2,9,30),  endTime:fmtISO(d2,12,0),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'2', description:'이동 최소화로 시차·피로 회복.' },
-    { summary:'😴 [Day2] 아기 낮잠/어른 휴식 ⚠️사수', startTime:fmtISO(d2,12,30), endTime:fmtISO(d2,14,30), timeZone:'Asia/Ho_Chi_Minh', colorId:'2', description:'19개월 낮잠 사수! 이거 깨지면 오후 전체 멘붕.' },
-    { summary:'🏊 [Day2] 풀빌라/메인풀',        startTime:fmtISO(d2,15,0),  endTime:fmtISO(d2,17,0),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'2', description:'' },
-    { summary:'🦐 [Day2] 즈엉동 야시장',        startTime:fmtISO(d2,18,30), endTime:fmtISO(d2,20,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'2', description:'해산물 BBQ·코코넛 아이스크림. 택시 20~30분.' },
-    // Day 3
-    { summary:'🍳 [Day3] 조식',                 startTime:fmtISO(d3,7,30),  endTime:fmtISO(d3,8,30),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'3', description:'' },
-    { summary:'🌊 [Day3] 빈원더스 워터파크',    startTime:fmtISO(d3,9,30),  endTime:fmtISO(d3,12,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'3', description:'오전이 한산. 6세 강추.' },
-    { summary:'🍜 [Day3] 파크 낮잠+식사',       startTime:fmtISO(d3,12,30), endTime:fmtISO(d3,14,0),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'3', description:'유모차 낮잠 시간. 파크 내 식당.' },
-    { summary:'🦁 [Day3] 사파리/어뮤즈먼트',   startTime:fmtISO(d3,14,0),  endTime:fmtISO(d3,17,0),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'3', description:'둘 중 하나만. 6세: 사파리>워터파크. 19개월: 사파리 차량 투어 최고.' },
-    { summary:'🍽️ [Day3] 리조트 디너',         startTime:fmtISO(d3,19,0),  endTime:fmtISO(d3,20,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'3', description:'' },
-    // Day 4
-    { summary:'🍳 [Day4] 조식·여유',            startTime:fmtISO(d4,8,30),  endTime:fmtISO(d4,10,0),  timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'' },
-    { summary:'🏨 [Day4] 체크아웃 (짐 보관)',   startTime:fmtISO(d4,10,0),  endTime:fmtISO(d4,10,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'체크아웃 후 샤워실 사용 가능 여부 사전 확인 필수.' },
-    { summary:'🚡 [Day4] 혼똔섬 케이블카',      startTime:fmtISO(d4,10,30), endTime:fmtISO(d4,12,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'세계 최장 케이블카.' },
-    { summary:'🍽️ [Day4] 선셋타운 점심',       startTime:fmtISO(d4,13,0),  endTime:fmtISO(d4,14,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'' },
-    { summary:'🏊 [Day4] 리조트 풀·샤워실',     startTime:fmtISO(d4,14,30), endTime:fmtISO(d4,16,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'체크아웃 후 샤워실 사용 확인.' },
-    { summary:'✈️ [Day4] 공항 이동·출국',       startTime:fmtISO(d4,17,0),  endTime:fmtISO(d4,21,30), timeZone:'Asia/Ho_Chi_Minh',  colorId:'4', description:'공항 도착 역산 필수.' },
-  ];
-}
-
-const depInput      = document.getElementById('dep-date');
-const calBtn        = document.getElementById('cal-btn');
-const calStatusBox  = document.getElementById('cal-status-box');
-const calProgress   = document.getElementById('cal-progress');
-const dayDatesPreview = document.getElementById('day-dates-preview');
-
-depInput.addEventListener('change', () => {
-  const val = depInput.value;
-  if (!val) { calBtn.disabled = true; dayDatesPreview.textContent = ''; return; }
-  const dep = new Date(val + 'T00:00:00');
-  calBtn.disabled = false;
-  dayDatesPreview.innerHTML = [0,1,2,3].map(i => {
-    const d = addDays(dep, i);
-    return `<strong>Day${i+1}</strong>: ${fmtKR(d)}`;
-  }).join(' &nbsp;·&nbsp; ');
-});
-
-calBtn.addEventListener('click', async () => {
-  const val = depInput.value;
-  if (!val) return;
-
-  // 중복 등록 방지
-  try {
-    if (localStorage.getItem('pq-cal-registered') === val) {
-      calStatusBox.style.display = '';
-      calStatusBox.className = 'cal-status info';
-      calStatusBox.textContent = `ℹ️ ${val} 출발 일정은 이미 등록됐습니다. 캘린더 앱에서 확인하거나 다른 출발일을 선택하세요.`;
-      return;
-    }
-  } catch(e) {}
-
-  const dep = new Date(val + 'T00:00:00');
-  const events = getEventBlocks(dep);
-
-  calBtn.disabled = true;
-  calBtn.textContent = '등록 중...';
-  calStatusBox.style.display = '';
-  calStatusBox.className = 'cal-status info';
-  calStatusBox.innerHTML = `<span class="spinner"></span> 총 ${events.length}개 이벤트 등록 중...`;
-  calProgress.innerHTML = '';
-
-  let ok = 0, fail = 0;
-
-  for (const ev of events) {
-    const item = document.createElement('div');
-    item.className = 'cal-progress-item';
-    item.innerHTML = `<span class="spinner"></span> ${ev.summary}`;
-    calProgress.appendChild(item);
-
-    try {
-      await window.cowork.callMcpTool(
-        'mcp__1564f772-7d43-4b4e-8c04-1c754dcdf2a1__create_event',
-        {
-          calendarId:  'simha0908@gmail.com',
-          summary:     ev.summary,
-          startTime:   ev.startTime,
-          endTime:     ev.endTime,
-          timeZone:    ev.timeZone,
-          colorId:     ev.colorId,
-          description: ev.description || '',
-        }
-      );
-      ok++;
-      item.innerHTML = `✅ ${ev.summary}`;
-    } catch(e) {
-      fail++;
-      item.innerHTML = `❌ ${ev.summary} <span style="color:#9ca3af;font-size:11px">(${e?.message || '오류'})</span>`;
-    }
-  }
-
-  calStatusBox.className = fail === 0 ? 'cal-status success' : 'cal-status error';
-  calStatusBox.textContent = fail === 0
-    ? `🎉 ${ok}개 이벤트가 등록됐습니다! Google Calendar 앱에서 확인하세요.`
-    : `⚠️ ${ok}개 성공 / ${fail}개 실패. 위 목록에서 실패 항목을 확인하세요.`;
-
-  calBtn.disabled = false;
-  calBtn.textContent = '캘린더에 등록';
-  if (fail === 0) { try { localStorage.setItem('pq-cal-registered', val); } catch(e) {} }
-});
-
-// ─────────────────────────────────────────
-//  ② BOOKING TRACKER
-// ─────────────────────────────────────────
-const TRACKER_CFG = [
-  { id:'tr-flight',     icon:'✈️', label:'항공',       query:'(베트젯 OR VietJet OR 이스타 OR 항공권 OR 항공) newer_than:1y' },
-  { id:'tr-hotel',      icon:'🏨', label:'숙소',       query:'(메리어트 OR Marriott OR 인터컨티넨탈 OR 멜리아 OR 호텔 OR 리조트 OR Booking OR Agoda) newer_than:1y' },
-  { id:'tr-vinwonders', icon:'🎢', label:'빈원더스',   query:'(빈원더스 OR Vinwonders OR KKday OR Klook) newer_than:1y' },
-  { id:'tr-insurance',  icon:'🛡️', label:'여행자보험', query:'(여행자보험 OR travel insurance) newer_than:1y' },
-];
-
-let trackerLoaded = false;
-
-async function loadTracker() {
-  if (trackerLoaded) return;
-  trackerLoaded = true;
-
-  for (const cfg of TRACKER_CFG) {
-    const el = document.getElementById(cfg.id);
-    if (!el) continue;
-    try {
-      const result = await window.cowork.callMcpTool(
-        'mcp__c02abca3-d338-4433-ae4c-4b50930551fb__search_threads',
-        { query: cfg.query }
-      );
-
-      // 방어적 파싱: 빈 결과는 {} 또는 {threads:[]} 로 옴
-      const threads = (result && Array.isArray(result.threads)) ? result.threads : [];
-      const count = threads.length;
-
-      if (count === 0) {
-        el.className = 'tracker-item not-booked';
-        el.innerHTML = `<div class="ti-label">${cfg.icon} ${cfg.label}</div>
-          <div class="ti-status">⬜ 미예약 <span style="color:#9ca3af;font-size:11px">(관련 메일 없음)</span></div>`;
-      } else {
-        const first = threads[0];
-        const msgs  = first?.messages || [];
-        const msg   = msgs[0] || {};
-        const subject = msg.subject || msg.Subject || first?.subject || '(제목 없음)';
-        const snippet = msg.snippet || msg.Snippet || first?.snippet || '';
-        el.className = 'tracker-item booked';
-        el.innerHTML = `<div class="ti-label">${cfg.icon} ${cfg.label}</div>
-          <div class="ti-status">✅ 예약 완료 <span style="color:#6b7280;font-size:11px">(메일 ${count}건)</span></div>
-          <div class="ti-preview" title="${snippet.replace(/"/g,"'")}">${subject}</div>`;
-      }
-    } catch(e) {
-      el.className = 'tracker-item not-booked';
-      el.innerHTML = `<div class="ti-label">${cfg.icon} ${cfg.label}</div>
-        <div class="ti-status">⬜ 검색됨 · 관련 메일 없음</div>`;
-    }
-  }
-}
-
-// 체크 탭 클릭 시 트래커 로드
-document.querySelector('.tab[data-tab="checklist"]').addEventListener('click', loadTracker);
-
-// 복원된 탭이 체크 탭이면 바로 로드
-(function() {
-  try { if (localStorage.getItem('pq-tab') === 'checklist') loadTracker(); } catch(e) {}
-})();
-
-// ─────────────────────────────────────────
-//  ③ Q&A
-// ─────────────────────────────────────────
-const TRIP_CONTEXT = {
-  trip: '푸꾸옥 3박4일 (성인4+6세+19개월)',
-  budget: '435~575만원 (5인 기준)',
-  resort: 'JW 메리어트 남부 추천 (공항 25분)',
-  schedule: {
-    day1: '인천 19:30 출발 → 22:30 현지 도착 → 리조트 체크인 → 취침',
-    day2: '조식(08:00) → 키즈풀+비치(09:30~12:00) → 낮잠 사수(12:30~14:30) → 즈엉동 야시장(18:30)',
-    day3: '빈원더스: 워터파크(09:30~12:30) → 낮잠(12:30~14:00) → 사파리 또는 어뮤즈먼트(14:00~17:00) → 리조트 디너',
-    day4: '조식 → 체크아웃 → 혼똔섬 케이블카(10:30~12:30) → 선셋타운 점심 → 공항(17:00) → 출국(20:00)',
-  },
-  principles: ['19개월 낮잠 12:30~14:30 사수', '하루 1 액티비티 원칙', '이동 30분 이내', '10월 우기 끝물 스콜 대비'],
-  resorts: {
-    JW메리어트: '남부, 공항 25분, 40~80만/박, 키즈클럽 5성',
-    인터컨티넨탈: '중부, 공항 20분, 35~70만/박, 키즈클럽 4성',
-    멜리아빈펄: '북부, 공항 45분, 빈원더스 셔틀 있음, 키즈클럽 5성',
-  },
-  alternativePlans: { 우천: '코랄 오션 파크(실내 수족관) 또는 리조트 키즈클럽' },
-};
-
-const qaInput  = document.getElementById('qa-input');
-const qaBtn    = document.getElementById('qa-btn');
-const qaAnswer = document.getElementById('qa-answer');
-
-document.querySelectorAll('.qa-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    qaInput.value = chip.dataset.q;
-    qaBtn.click();
-  });
-});
-
-qaBtn.addEventListener('click', async () => {
-  const q = qaInput.value.trim();
-  if (!q) return;
-  qaAnswer.innerHTML = `<span class="spinner"></span> 답변 생성 중...`;
-  qaBtn.disabled = true;
-  try {
-    const answer = await window.cowork.askClaude(
-      `다음은 푸꾸옥 가족여행(성인4+6세+19개월, 3박4일) 일정 데이터다. 이 맥락에서 다음 질문에 한국어로 간결하고 실용적으로 답하라. 질문: ${q}`,
-      [TRIP_CONTEXT]
-    );
-    qaAnswer.textContent = answer || '답변을 생성하지 못했습니다.';
-  } catch(e) {
-    qaAnswer.innerHTML = `<span style="color:#ef4444">오류가 발생했습니다. 다시 시도해 주세요.</span>`;
-  } finally {
-    qaBtn.disabled = false;
-  }
-});
-
-qaInput.addEventListener('keydown', e => { if (e.key === 'Enter') qaBtn.click(); });
-</script>
-
-<!-- ── 공유(웹) 모드 처리: Cowork 밖에서는 라이브 기능 숨김 ── -->
-<script>
-(function () {
-  var LIVE = !!(window.cowork && typeof window.cowork.callMcpTool === 'function');
-  if (LIVE) return; // Cowork 앱 안에서는 전체 기능 그대로
-
-  // 라이브 의존 탭/패널 숨김: 캘린더, Q&A
-  ['calendar', 'qa'].forEach(function (t) {
-    var btn = document.querySelector('.tab[data-tab="' + t + '"]'); if (btn) btn.style.display = 'none';
-    var panel = document.getElementById(t); if (panel) panel.style.display = 'none';
-  });
-  // 예약 트래커 카드 숨김 (체크 탭 내부)
-  var trk = document.getElementById('tr-flight');
-  if (trk) { var card = trk.closest('.card'); if (card) card.style.display = 'none'; }
-
-  // 숨긴 탭이 활성 상태였다면 '전체일정'으로 복귀
-  var active = document.querySelector('.panel.active');
-  if (!active || active.style.display === 'none') {
-    document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
-    document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('active'); });
-    var ov = document.querySelector('.tab[data-tab="overview"]'); if (ov) ov.classList.add('active');
-    var ovp = document.getElementById('overview'); if (ovp) ovp.classList.add('active');
-  }
-
-  // 안내 배너
-  var b = document.createElement('div');
-  b.className = 'share-banner';
-  b.innerHTML = '🔗 <b>공유용 보기 모드</b> — 지도·동선·타임라인·예산은 그대로 보고 만질 수 있어요. ' +
-                '캘린더 등록·예약 트래커·Q&A는 <b>Cowork 앱 전용</b>이라 이 페이지에선 숨겨졌습니다.';
-  document.body.insertBefore(b, document.body.firstChild);
-})();
-</script>
 </body>
 </html>
